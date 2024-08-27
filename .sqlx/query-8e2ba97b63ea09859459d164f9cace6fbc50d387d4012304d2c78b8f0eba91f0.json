@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "SELECT\r\n  content,\r\n  author,\r\n  created_at\r\nFROM\r\n  blog_posts\r\nWHERE\r\n  id = $1",
+  "query": "SELECT\n  content,\n  author,\n  created_at\nFROM\n  blog_posts\nWHERE\n  id = $1",
   "describe": {
     "columns": [
       {
@@ -30,5 +30,5 @@
       false
     ]
   },
-  "hash": "6132f2f444d287122b7b5915651ac53cdd1fb428ad81e05bd2da6d559b16a88c"
+  "hash": "8e2ba97b63ea09859459d164f9cace6fbc50d387d4012304d2c78b8f0eba91f0"
 }
