@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "SELECT\r\n  id, \r\n  password_hash\r\nFROM\r\n  users\r\nWHERE\r\n  email = $1",
+  "query": "SELECT id, title FROM blog_posts\nORDER BY created_at DESC",
   "describe": {
     "columns": [
       {
@@ -10,19 +10,17 @@
       },
       {
         "ordinal": 1,
-        "name": "password_hash",
-        "type_info": "Text"
+        "name": "title",
+        "type_info": "Varchar"
       }
     ],
     "parameters": {
-      "Left": [
-        "Text"
-      ]
+      "Left": []
     },
     "nullable": [
       false,
       false
     ]
   },
-  "hash": "d371ee18f8fa6724172d67cebec76b5221d990a48f94461f2a928014186018e8"
+  "hash": "59a617367f55c27d9b0988ffa03cc1e16901eeee4907481a6fececc89da55f00"
 }

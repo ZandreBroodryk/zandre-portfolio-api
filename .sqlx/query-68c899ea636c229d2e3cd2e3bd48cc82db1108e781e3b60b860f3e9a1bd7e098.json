@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "SELECT\r\n  content,\r\n  users.display_name as author,\r\n  blog_posts.created_at\r\nFROM\r\n  blog_posts\r\nINNER JOIN users on users.id = blog_posts.author\r\nWHERE\r\n  blog_posts.id = $1",
+  "query": "SELECT\n  content,\n  users.display_name as author,\n  blog_posts.created_at\nFROM\n  blog_posts\nINNER JOIN users on users.id = blog_posts.author\nWHERE\n  blog_posts.id = $1",
   "describe": {
     "columns": [
       {
@@ -30,5 +30,5 @@
       false
     ]
   },
-  "hash": "a4b2fc9a0c0c696be724d7a423b873a16035d7d9139a03f09b574bc464b8f691"
+  "hash": "68c899ea636c229d2e3cd2e3bd48cc82db1108e781e3b60b860f3e9a1bd7e098"
 }
