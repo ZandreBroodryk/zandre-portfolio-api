@@ -1,0 +1,1 @@
+SELECT id, title FROM blog_posts
