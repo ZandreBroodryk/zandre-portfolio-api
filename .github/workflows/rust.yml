@@ -19,7 +19,7 @@ jobs:
     - name: check env
       run: echo $DATABASE_URL
     - name: check cache
-      run: ls
+      run: ls .sqlx
     - name: Build
       run: cargo build
       env: 
