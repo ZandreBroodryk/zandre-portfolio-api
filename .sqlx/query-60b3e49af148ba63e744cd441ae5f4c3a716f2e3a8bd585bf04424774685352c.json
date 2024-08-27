@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "INSERT INTO\n  public.blog_posts (title, content, author)\nVALUES\n  ($1, $2, $3)\nRETURNING id",
+  "query": "INSERT INTO\r\n  public.blog_posts (title, content, author)\r\nVALUES\r\n  ($1, $2, $3)\r\nRETURNING id",
   "describe": {
     "columns": [
       {
@@ -20,5 +20,5 @@
       false
     ]
   },
-  "hash": "26e400da84146f7fe47d717926d5477c513ca64a86b6ca3065210cf102dbd797"
+  "hash": "60b3e49af148ba63e744cd441ae5f4c3a716f2e3a8bd585bf04424774685352c"
 }

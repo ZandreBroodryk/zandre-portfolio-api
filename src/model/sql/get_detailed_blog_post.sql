@@ -1,8 +1,9 @@
 SELECT
   content,
-  author,
-  created_at
+  users.display_name as author,
+  blog_posts.created_at
 FROM
   blog_posts
+INNER JOIN users on users.id = blog_posts.author
 WHERE
-  id = $1
+  blog_posts.id = $1

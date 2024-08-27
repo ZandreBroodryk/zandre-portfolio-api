@@ -18,14 +18,18 @@ pub enum ServerError {
     // Database Errors
     DatabaseFailure(String),
 
+    //BlogErros
+    NoTitleForBlogPost,
+
     //ServerErrors
     NoSaltPhrase,
     SaltEncodingFail,
-    HashFail(String)
+    HashFail(String),
 }
 
 pub enum ClientError {
     LoginFail,
+    BadRequest,
     Unauthorized,
     NotFound,
     Forbidden,
@@ -40,6 +44,7 @@ impl ServerError {
             | Self::AuthFailNoAuthToken
             | Self::AuthFailInvalidJwtToken => ClientError::Unauthorized,
             Self::DatabaseFailure(..) => ClientError::NotFound,
+            Self::NoTitleForBlogPost => ClientError::BadRequest,
             _ => ClientError::ServerError,
         }
     }
@@ -55,10 +60,10 @@ impl IntoResponse for ServerError {
     fn into_response(self) -> axum::response::Response {
         let mut response = StatusCode::INTERNAL_SERVER_ERROR.into_response();
 
-		// Insert the Error into the reponse.
-		response.extensions_mut().insert(self);
+        // Insert the Error into the reponse.
+        response.extensions_mut().insert(self);
 
-		response
+        response
     }
 }
 
@@ -69,7 +74,10 @@ impl IntoResponse for ClientError {
             ClientError::LoginFail => (StatusCode::FORBIDDEN, "Forbidden"),
             ClientError::Unauthorized => (StatusCode::UNAUTHORIZED, "Unauthorized"),
             ClientError::NotFound => (StatusCode::NOT_FOUND, "Not Found"),
-            ClientError::ServerError => (StatusCode::INTERNAL_SERVER_ERROR, "Internal Server Error"),
+            ClientError::BadRequest => (StatusCode::BAD_REQUEST, "Bad Request"),
+            ClientError::ServerError => {
+                (StatusCode::INTERNAL_SERVER_ERROR, "Internal Server Error")
+            }
         };
 
         status_message.into_response()

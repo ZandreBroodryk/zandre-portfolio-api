@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "SELECT\n  content,\n  author,\n  created_at\nFROM\n  blog_posts\nWHERE\n  id = $1",
+  "query": "SELECT\r\n  content,\r\n  users.display_name as author,\r\n  blog_posts.created_at\r\nFROM\r\n  blog_posts\r\nINNER JOIN users on users.id = blog_posts.author\r\nWHERE\r\n  blog_posts.id = $1",
   "describe": {
     "columns": [
       {
@@ -11,7 +11,7 @@
       {
         "ordinal": 1,
         "name": "author",
-        "type_info": "Int4"
+        "type_info": "Varchar"
       },
       {
         "ordinal": 2,
@@ -30,5 +30,5 @@
       false
     ]
   },
-  "hash": "8e2ba97b63ea09859459d164f9cace6fbc50d387d4012304d2c78b8f0eba91f0"
+  "hash": "a4b2fc9a0c0c696be724d7a423b873a16035d7d9139a03f09b574bc464b8f691"
 }

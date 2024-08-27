@@ -1,10 +1,11 @@
-use axum::{middleware, Router};
+use axum::{http::Method, middleware, Router};
 use context::Keys;
 use error::response_error_mapper;
 use model::{auth::AuthController, blog::BlogController};
 use once_cell::sync::Lazy;
 use shuttle_runtime::SecretStore;
 use sqlx::PgPool;
+use tower_http::cors::{Any, CorsLayer};
 
 pub use self::error::{Result, ServerError};
 
@@ -44,7 +45,13 @@ async fn main(
 
     let router = Router::new()
         .nest("/api", web::api_routes(state))
-        .layer(middleware::map_response(response_error_mapper));
+        .layer(middleware::map_response(response_error_mapper))
+        .layer(
+            CorsLayer::new()
+                .allow_headers(Any)
+                .allow_methods([Method::GET, Method::POST])
+                .allow_origin(Any),
+        );
 
     Ok(router.into())
 }

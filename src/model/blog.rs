@@ -15,7 +15,7 @@ pub struct BlogSummary {
 #[serde(rename_all = "camelCase")]
 pub struct DetailedBlog {
     created_at: NaiveDate,
-    author: i32,
+    author: String,
     content: String,
 }
 
@@ -38,7 +38,15 @@ impl BlogController {
 
 impl BlogController {
     pub async fn create_blog(&self, context: Context, blog: NewBlog) -> Result<BlogSummary> {
-        let title = blog.content.split('\n').collect::<Vec<&str>>()[0].to_string();
+        let title = blog
+            .content
+            .split('\n')
+            .collect::<Vec<&str>>()
+            .first()
+            .ok_or(ServerError::NoTitleForBlogPost)?
+            .trim_start_matches("# ")
+            .to_string();
+
         let content = blog.content;
 
         let id = sqlx::query_file!(
