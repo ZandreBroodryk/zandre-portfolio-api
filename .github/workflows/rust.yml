@@ -16,8 +16,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: install sqlx-cli
+    - name: check env
       run: echo $DATABASE_URL
+    - name: check cache
+      run: ls
     - name: Build
       run: cargo build
       env: 
