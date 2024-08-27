@@ -1,4 +1,4 @@
-use axum::{middleware, routing::get, Router};
+use axum::{middleware, Router};
 use context::Keys;
 use error::response_error_mapper;
 use model::{auth::AuthController, blog::BlogController};
@@ -18,10 +18,6 @@ static KEYS: Lazy<Keys> = Lazy::new(|| {
     let secret = std::env::var("JWT_SECRET").expect("JWT_SECRET must be set");
     Keys::new(secret.as_bytes())
 });
-
-async fn hello_world() -> &'static str {
-    "Hello, world!"
-}
 
 #[shuttle_runtime::main]
 async fn main(
@@ -47,7 +43,6 @@ async fn main(
     };
 
     let router = Router::new()
-        .route("/", get(hello_world))
         .nest("/api", web::api_routes(state))
         .layer(middleware::map_response(response_error_mapper));
 
