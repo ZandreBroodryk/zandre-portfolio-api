@@ -22,7 +22,7 @@ pub struct DetailedBlog {
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct NewBlog {
-    contents: String,
+    content: String,
 }
 
 #[derive(Clone)]
@@ -38,8 +38,8 @@ impl BlogController {
 
 impl BlogController {
     pub async fn create_blog(&self, context: Context, blog: NewBlog) -> Result<BlogSummary> {
-        let title = blog.contents.split('\n').collect::<Vec<&str>>()[0].to_string();
-        let content = blog.contents;
+        let title = blog.content.split('\n').collect::<Vec<&str>>()[0].to_string();
+        let content = blog.content;
 
         let id = sqlx::query_file!(
             "src/model/sql/add_blog_post.sql",
