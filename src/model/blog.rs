@@ -21,7 +21,7 @@ pub struct DetailedBlog {
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct NewBlog {
+pub struct BlogWriteModel {
     content: String,
 }
 
@@ -37,7 +37,7 @@ impl BlogController {
 }
 
 impl BlogController {
-    pub async fn create_blog(&self, context: Context, blog: NewBlog) -> Result<BlogSummary> {
+    pub async fn create_blog(&self, context: Context, blog: BlogWriteModel) -> Result<BlogSummary> {
         let title = blog
             .content
             .split('\n')
@@ -59,6 +59,40 @@ impl BlogController {
         .await
         .map_err(|error| ServerError::DatabaseFailure(error.to_string()))?
         .id;
+
+        return Ok(BlogSummary {
+            id: id,
+            title: title,
+        });
+    }
+
+    pub async fn update_blog_post(
+        &self,
+        context: Context,
+        id: i32,
+        blog: BlogWriteModel,
+    ) -> Result<BlogSummary> {
+        let title = blog
+            .content
+            .split('\n')
+            .collect::<Vec<&str>>()
+            .first()
+            .ok_or(ServerError::NoTitleForBlogPost)?
+            .trim_start_matches("# ")
+            .to_string();
+
+        let content = blog.content;
+
+        sqlx::query_file!(
+            "src/model/sql/update_blog_post.sql",
+            id,
+            title,
+            content,
+            context.current_user_id()
+        )
+        .execute(&self.pool)
+        .await
+        .map_err(|error| ServerError::DatabaseFailure(error.to_string()))?;
 
         return Ok(BlogSummary {
             id: id,

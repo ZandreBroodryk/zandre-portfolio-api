@@ -8,7 +8,7 @@ use axum::{
 use crate::{
     context::{middleware_ctx_resolver, Context},
     model::{
-        blog::{BlogController, BlogSummary, DetailedBlog, NewBlog},
+        blog::{BlogController, BlogSummary, DetailedBlog, BlogWriteModel},
         ApiState,
     },
     Result,
@@ -17,7 +17,7 @@ use crate::{
 pub fn routes(state: ApiState) -> Router {
     Router::new()
         .route("/", post(create_blog_post).get(get_blog_posts))
-        .route("/:id", get(get_detailed_blog))
+        .route("/:id", get(get_detailed_blog).post(update_blog_post))
         .route_layer(middleware::from_fn(middleware_ctx_resolver))
         .with_state(state)
 }
@@ -25,9 +25,20 @@ pub fn routes(state: ApiState) -> Router {
 async fn create_blog_post(
     State(blog_controller): State<BlogController>,
     context: Context,
-    Json(blog): Json<NewBlog>,
+    Json(blog): Json<BlogWriteModel>,
 ) -> Result<Json<BlogSummary>> {
     let blog_summary = blog_controller.create_blog(context, blog).await?;
+    return Ok(Json(blog_summary));
+}
+
+async fn update_blog_post(
+    State(blog_controller): State<BlogController>,
+    context: Context,
+    Path(id): Path<i32>,
+    Json(blog): Json<BlogWriteModel>,
+) -> Result<Json<BlogSummary>> {
+    let blog_summary = blog_controller.update_blog_post(context, id, blog).await?;
+
     return Ok(Json(blog_summary));
 }
 
