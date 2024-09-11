@@ -1,4 +1,4 @@
-use chrono::NaiveDate;
+use chrono::{NaiveDate, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
 
@@ -9,6 +9,8 @@ use crate::{context::Context, Result, ServerError};
 pub struct BlogSummary {
     id: i32,
     title: String,
+    created_at: NaiveDate,
+    word_count: i32
 }
 
 #[derive(Debug, Serialize)]
@@ -60,9 +62,13 @@ impl BlogController {
         .map_err(|error| ServerError::DatabaseFailure(error.to_string()))?
         .id;
 
+        let word_count = content.split(' ').count() as i32;
+
         return Ok(BlogSummary {
             id: id,
             title: title,
+            created_at: Utc::now().date_naive(),
+            word_count
         });
     }
 
@@ -94,9 +100,13 @@ impl BlogController {
         .await
         .map_err(|error| ServerError::DatabaseFailure(error.to_string()))?;
 
+    let word_count = content.split(' ').count() as i32;
+
         return Ok(BlogSummary {
             id: id,
             title: title,
+            created_at: Utc::now().date_naive(),
+            word_count
         });
     }
 
